@@ -33,6 +33,7 @@ class ColorBarFillStage {
         this.canvas.onmousedown = () => {
             this.colorBarContainer.startUpdating(() => {
                 this.animator.start(() => {
+                    this.render()
                     this.colorBarContainer.update(() => {
                         this.animator.stop()
                     })
@@ -45,21 +46,24 @@ class ColorBarFillStage {
 class State {
     scale : number = 0
     dir : number = 0
-    prevScale : number = 0
+    deg : number = 0
+    prevDeg : number = 0
 
     update(stopcb : Function) {
-        this.scale += 0.1 * this.dir
-        if (Math.abs(this.scale - this.prevScale) > 1) {
-            this.scale = this.prevScale + this.dir
+        this.deg += this.dir * Math.PI/20
+        this.scale = Math.sin(this.deg)
+        if (Math.abs(this.deg - this.prevDeg) > Math.PI/2) {
+            this.deg = this.prevDeg + Math.PI/2 * this.dir
             this.dir = 0
-            this.prevScale = this.scale
-            stopcb(this.prevScale)
+            this.prevDeg = this.deg
+            this.scale = Math.sin(this.deg)
+            stopcb()
         }
     }
 
     startUpdating(startcb : Function) {
         if (this.dir == 0) {
-            this.dir = 1 - 2 * this.prevScale
+            this.dir = 1 - 2 * this.scale
             startcb()
         }
     }
@@ -69,7 +73,7 @@ class ContainerState {
 
     j : number = 0
 
-    dir : number = 0
+    dir : number = 1
 
     constructor(private n : number) {
 
@@ -79,6 +83,7 @@ class ContainerState {
         this.j += this.dir
         if (this.j == this.n || this.j == -1) {
             this.dir *= -1
+            this.j += this.dir
         }
     }
 
@@ -145,9 +150,12 @@ class ColorBarContainer {
     }
 
     draw(context : CanvasRenderingContext2D) {
+        context.save()
+        context.translate(w/2 - w/10, h/2 - h/10)
         this.colorBars.forEach((colorBar) => {
             colorBar.draw(context)
         })
+        context.restore()
     }
 }
 
