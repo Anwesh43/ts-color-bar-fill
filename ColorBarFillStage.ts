@@ -8,6 +8,10 @@ class ColorBarFillStage {
 
     context : CanvasRenderingContext2D
 
+    animator : ColorBarAnimator = new ColorBarAnimator()
+
+    colorBarContainer : ColorBarContainer = new ColorBarContainer()
+    
     constructor() {
         this.initCanvas()
     }
@@ -22,11 +26,18 @@ class ColorBarFillStage {
     render() {
         this.context.fillStyle = '#212121'
         this.context.fillRect(0, 0, w, h)
+        this.colorBarContainer.draw(this.context)
     }
 
     handleTap() {
         this.canvas.onmousedown = () => {
-
+            this.colorBarContainer.startUpdating(() => {
+                this.animator.start(() => {
+                    this.colorBarContainer.update(() => {
+                        this.animator.stop()
+                    })
+                })
+            })
         }
     }
 }
