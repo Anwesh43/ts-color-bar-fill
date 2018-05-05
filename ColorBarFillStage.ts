@@ -50,3 +50,25 @@ class State {
         }
     }
 }
+
+class ContainerState {
+
+    j : number = 0
+
+    dir : number = 0
+
+    constructor(private n : number) {
+
+    }
+
+    incrementCounter() {
+        this.j += this.dir
+        if (this.j == this.n || this.j == -1) {
+            this.dir *= -1
+        }
+    }
+
+    execute(cb : Function) {
+        cb(this.j)
+    }
+}
