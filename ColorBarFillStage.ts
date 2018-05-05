@@ -1,4 +1,7 @@
 const w : number = window.innerWidth, h :number = window.innerHeight
+
+const colors : Array<String> = ["#3F51B5", "#00BCD4", "#f44336", "#7C4DFF", "#7B1FA2"]
+
 class ColorBarFillStage {
 
     canvas : HTMLCanvasElement = document.createElement('canvas')
@@ -70,5 +73,29 @@ class ContainerState {
 
     execute(cb : Function) {
         cb(this.j)
+    }
+}
+
+class ColorBar {
+
+    state : State = new State()
+
+    constructor(private i : number) {
+
+    }
+
+    draw(context : CanvasRenderingContext2D) {
+        const w_size : number = w/5
+        const h_size : number = Math.min(w, h)/(2 * colors.length)
+        context.fillStyle = colors[this.i]
+        context.fillRect(0, this.i * h_size, w_size * this.state.scale, h_size)
+    }
+
+    update(stopcb : Function) {
+        this.state.update(stopcb)
+    }
+
+    startUpdating(startcb : Function) {
+        this.state.startUpdating(startcb)
     }
 }
