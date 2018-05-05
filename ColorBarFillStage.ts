@@ -11,7 +11,7 @@ class ColorBarFillStage {
     animator : ColorBarAnimator = new ColorBarAnimator()
 
     colorBarContainer : ColorBarContainer = new ColorBarContainer()
-    
+
     constructor() {
         this.initCanvas()
     }
@@ -172,4 +172,10 @@ class ColorBarAnimator {
             clearInterval(this.interval)
         }
     }
+}
+
+const initColorBarContainer : Function = () => {
+    const stage : ColorBarFillStage = new ColorBarFillStage()
+    stage.render()
+    stage.handleTap()
 }
