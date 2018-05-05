@@ -72,7 +72,9 @@ class ContainerState {
     }
 
     execute(cb : Function) {
-        cb(this.j)
+        if (this.j < this.n) {
+            cb(this.j)
+        }
     }
 }
 
@@ -98,4 +100,43 @@ class ColorBar {
     startUpdating(startcb : Function) {
         this.state.startUpdating(startcb)
     }
+}
+
+class ColorBarContainer {
+
+    state : ContainerState = new ContainerState(colors.length)
+
+    colorBars : Array<ColorBar> = []
+
+    constructor() {
+        this.initColorBars()
+    }
+
+    initColorBars() {
+        for (var i = 0; i < colors.length; i++) {
+            this.colorBars.push(new ColorBar(i))
+        }
+    }
+
+    update(stopcb : Function) {
+        this.state.execute((j) => {
+            this.colorBars[j].update(()=>{
+                this.state.incrementCounter()
+                stopcb()
+            })
+        })
+    }
+
+    startUpdating(startcb : Function) {
+      this.state.execute((j) => {
+          this.colorBars[j].startUpdating(startcb)
+      })
+    }
+
+    draw(context : CanvasRenderingContext2D) {
+        this.colorBars.forEach((colorBar) => {
+            colorBar.draw(context)
+        })
+    }
+
 }
